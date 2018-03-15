@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="www.thymeleaf.org " xmlns:sec="www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Twitter</title>
+
+    <th:block th:replace="base :: head"></th:block>
+</head>
+	<body>
+		<th:block th:replace="base :: nav"></th:block>
+		
+		<div class="container">
+			
+			<br/>
+			<br/>
+			<div th:if="${message!=null}" >
+				<h3 th:text="${message}"></h3>
+			</div>
+			<br/>
+			<br/>
+			<div class="col-sm-4 col-md-6">
+		       <form th:action="@{/savepost}"  method="post">
+					
+					<div class="form-group">
+						<textarea class="form-control" rows="3" placeholder= "new post" name="content"></textarea>
+					</div>
+					<button type="submit" class="btn btn-primary">Submit</button>
+
+				</form>
+				<br/>
+				 
+					
+					<a th:href="@{/upload}" class="btn btn-primary">Upload Picture</button>
+
+				
+		
+		    </div>
+		    <br/>
+		    <br />
+		    <br />
+		    <div class ="col-sm-4 col-md-8">
+				<ul>
+					<div th:each="post : ${allPosts}">
+						<div class="content">
+							<a th:href="@{/post/{id}(id = ${post.postedBy.id})}" th:text="${post.postedBy.firstName + ' ' + post.postedBy.lastName}"></a>
+								<small><span th:text="${post.postedBy.username}"></span></small>
+							
+							<p th:text="${post.content}"/>
+							<p th:text="${post.postedDate}"/>
+						</div>
+					</div>
+					
+					<th:block th:each="photo : ${photos}">
+						<a th:href="@{/post/{id}(id = ${photo.user.id})}" th:text="${photo.user.firstName + ' ' + photo.user.lastName}"></a>
+						<div th:utext="${photo.image}"></div>
+							<form th:action="@{/delete/{photoId}(photoId=${photo.photoId})}" method= "post">
+								 	<button type="submit" class="btn btn-default">Delete</button>
+							</form>	 	
+								 	
+							<form th:action="@{/like/{photoId}(photoId=${photo.photoId})}" method="post">
+								 	<button type="submit" class="btn btn-default">Like</button>
+							</form>
+							
+					</th:block>
+					
+				</ul>
+				
+					
+				
+					
+				
+			</div>
+		</div>
+		
+		<th:block th:replace="base :: footlinks"></th:block>
+	</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="www.thymeleaf.org " xmlns:sec="www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Twitter</title>
+
+    <th:block th:replace="base :: head"></th:block>
+</head>
+	<body>
+		<th:block th:replace="base :: nav"></th:block>
+		<br/>
+		<br/>
+		<br/>
+		<div class="container">
+			<br/>
+			<div th:if="${allUsers!=null}" class ="col-sm-4 col-md-8">
+				
+					<table class="table table-hover" >
+						<tr>
+							<th>Users</th>
+							<th>Status</th>
+						</tr>
+						<tr th:each="user : ${allUsers}">
+							<td th:text="${user.key.firstName + ' ' + user.key.lastName}"></td>
+							
+							<td>
+								<form th:action="@{/follow/{id}(id = ${user.key.id})}" method= "post">
+								 	<input type="hidden" name="id" th:value="${user.key.id}"/>
+								 	<th:block th:if="user.value == true">
+								 		<button type="submit" class="btn btn-default">Following</button>
+								 	</th:block>
+								 	<th:block th:if="user.value != true">
+								 		<button type="submit" class="btn btn-default">Follow</button>
+								 	</th:block>
+								</form>
+							</td>
+						</tr>
+					</table>
+			</div>
+			
+			<div th:if="${followers!=null}"  class ="col-sm-4 col-md-8">
+				<table class="table table-hover" >
+						<tr>
+							<th>Users</th>
+							<th>Status</th>
+						</tr>
+						<tr th:each="user : ${followers}">
+							<td th:text="${user.key.firstName + ' ' + user.key.lastName}"></td>
+							
+							<td>
+								<form th:action="@{/follow/{id}(id = ${user.key.id})}" method= "post">
+								 	<input type="hidden" name="id" th:value="${user.key.id}"/>
+								 	<th:block th:if="user.value == 'true'">
+								 		<button type="submit" class="btn btn-default">Following</button>
+								 	</th:block>
+								 	<th:block th:if="user.value != 'true'">
+								 		<button type="submit" class="btn btn-default">Follow</button>
+								 	</th:block>
+								</form>
+							</td>
+						</tr>
+					</table>
+			</div>
+			
+			<div th:if="${followingUsers!=null}"  class ="col-sm-4 col-md-8">
+				<table class="table table-hover" >
+						<tr>
+							<th>Users</th>
+							<th>Status</th>
+						</tr>
+						<tr th:each="user : ${followingUsers}">
+							<td th:text="${user.firstName + ' ' + user.lastName}"></td>
+							<td>
+								<form th:action="@{/follow/{id}(id = ${user.id})}" method= "post">
+							 		<input type="hidden" name="id" th:value="${user.id}"/>
+							 		<button type="submit" class="btn btn-default">Following</button>
+								</form>
+							</td>
+						</tr>
+					</table>
+					
+				
+			</div>
+			
+			<div th:if="${everyUser!=null}"  class ="col-sm-4 col-md-8">
+				<ul>
+					<div th:each="user : ${everyUser}">
+						<div class="content">
+							<p th:text="${user.firstName + ' ' + user.lastName}"/>
+						</div>
+					</div>
+				
+				</ul>
+			</div>
+		</div>
+</body>
+</html>
