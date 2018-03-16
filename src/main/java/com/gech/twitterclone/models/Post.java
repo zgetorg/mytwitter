@@ -12,14 +12,26 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long post_id;
 
-   @NotEmpty
+//   @NotEmpty
    private String content;
    
    @ManyToOne
    @JoinColumn(name="user_id")
    private User postedBy;
-   
-   
+   private String image;
+
+	public void setPost_id(long post_id) {
+		this.post_id = post_id;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
 	private Date postedDate;
 
 

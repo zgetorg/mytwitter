@@ -4,12 +4,13 @@ import com.gech.twitterclone.models.Friendship;
 import com.gech.twitterclone.models.Post;
 import com.gech.twitterclone.models.User;
 import com.gech.twitterclone.repositories.FriendshipRepository;
-import com.gech.twitterclone.repositories.PhotoRepository;
+
 import com.gech.twitterclone.repositories.PostRepository;
 import com.gech.twitterclone.repositories.UserRepository;
 import com.gech.twitterclone.services.UserService;
-import com.gech.twitterclone.validators.UserValidator;
+//import com.gech.twitterclone.validators.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,8 +29,8 @@ import java.util.Map;
 @Controller
 public class HomeController {
 
-    @Autowired
-    private UserValidator userValidator;
+//    @Autowired
+//    private UserValidator userValidator;
 
     @Autowired
     private UserService userService;
@@ -43,8 +44,6 @@ public class HomeController {
     @Autowired
     private FriendshipRepository friendshipRepository;
     
-    @Autowired
-    private PhotoRepository photoRepository;
 
     @RequestMapping("/")
     public String index(Model m){
@@ -68,7 +67,7 @@ public class HomeController {
     public String processRegistrationPage(@Valid @ModelAttribute("user") User user, BindingResult result, Model model){
 
         model.addAttribute("user", user);
-        userValidator.validate(user, result);
+//        userValidator.validate(user, result);
 
         if (result.hasErrors()) {
             return "registration";
@@ -87,8 +86,25 @@ public class HomeController {
     
     @RequestMapping("/me")
     public String profile(Principal principal, Model model){
+
+
     	User user = userRepository.findByEmail(principal.getName());
-    	List<Post> posts = postRepository.findByPostedBy_Id(user.getId());
+        List<Post> posts=new ArrayList<>();
+
+    	List<Friendship> friends = friendshipRepository.findByFollower_Id(user.getId());
+
+    	List<User> users = new ArrayList<User>();
+
+    	for(Friendship friend : friends){
+
+    		users.add(friend.getFollowing());
+    	}
+    	users.add(user);
+
+        for (User u:users){
+           posts = postRepository.findByPostedBy_Id(u.getId());
+        }
+
     	model.addAttribute("allPosts", posts);
     	
     	return "tweet";
@@ -104,8 +120,8 @@ public class HomeController {
     }
     
     @RequestMapping("/allusers/me")
-    public String allUsers(Principal principal, Model model){
-    	User u = userRepository.findByEmail(principal.getName());
+    public String allUsers(Authentication auth, Model model){
+    	User u = userRepository.findByEmail(auth.getName());
     	List<Friendship> friends = friendshipRepository.findByFollower_Id(u.getId());
     	Iterable<User> users = userRepository.findAll();
     	Map<User, Boolean> allusers = new HashMap<User, Boolean>();
@@ -192,12 +208,12 @@ public class HomeController {
     	return "redirect:/allusers/me";
     }
     
-    
-    public UserValidator getUserValidator() {
-        return userValidator;
-    }
-
-    public void setUserValidator(UserValidator userValidator) {
-        this.userValidator = userValidator;
-    }
+//
+//    public UserValidator getUserValidator() {
+//        return userValidator;
+//    }
+//
+//    public void setUserValidator(UserValidator userValidator) {
+//        this.userValidator = userValidator;
+//    }
 }

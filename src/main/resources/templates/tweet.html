@@ -19,11 +19,16 @@
 				<ul>
 					<div th:each="post : ${allPosts}">
 						<div class="content">
-						<p><a href="#" th:text="${post.postedBy.firstName + ' ' + post.postedBy.lastName}"/>
-							<small><span th:text="${post.postedBy.username}"></span></small>
-						</p>
-						<p th:text="${post.content}"/>
-						<p th:text="${post.postedDate}"/>
+							<a th:href="@{/post/{id}(id = ${post.postedBy.id})}" th:text="${post.postedBy.firstName + ' ' + post.postedBy.lastName}"></a>
+							<!--<small><span th:text="${post.postedBy.username}"></span></small>-->
+<!---->
+							<div th:text="${post.content}"></div>
+							<div th:if="${post.image !=null}">
+								<img th:src="${post.image}" width="80" height="80">
+							</div>
+
+							<div th:text="${post.postedDate}"></div>
+							<br/><br/>
 						</div>
 					</div>
 					

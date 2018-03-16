@@ -15,9 +15,9 @@ public class CloudinaryConfig {
     private Cloudinary cloudinary;
 
     @Autowired
-    public CloudinaryConfig(@Value("${cloudinary.apikey}") String key,
-                            @Value("${cloudinary.apisecret}") String secret,
-                            @Value("${cloudinary.cloudname}") String cloud){
+    public CloudinaryConfig(@Value("144745671748477") String key,
+                            @Value("xqT5kVNUDSGO-jUVYuJ00hUmbRc") String secret,
+                            @Value("dvlqurekt") String cloud){
         cloudinary = Singleton.getCloudinary();
         cloudinary.config.cloudName=cloud;
         cloudinary.config.apiSecret=secret;
